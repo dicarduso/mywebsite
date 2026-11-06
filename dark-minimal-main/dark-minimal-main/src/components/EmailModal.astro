@@ -1,0 +1,191 @@
+---
+const email = "dicarduso@protonmail.com";
+---
+
+<!--
+  Email pop-up. Render this component ONCE per page (it is included in home.astro).
+  Any element with the attribute `data-email-trigger` opens it (home + footer icons).
+-->
+<div id="email-modal" class="email-overlay" aria-hidden="true">
+  <div
+    class="email-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="email-modal-title"
+    tabindex="-1"
+  >
+    <button type="button" class="email-close" data-email-close aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+        <path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path>
+      </svg>
+    </button>
+
+    <h2 id="email-modal-title" class="email-title">Email</h2>
+    <a class="email-address" href={`mailto:${email}`}>{email}</a>
+    <button type="button" class="email-copy" data-email-copy data-email={email}>
+      Copy
+    </button>
+  </div>
+</div>
+
+<style>
+  .email-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); /* blurs the whole site behind the pop-up */
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+  }
+  .email-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .email-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 26rem;
+    padding: 2.25rem 1.75rem 1.75rem;
+    text-align: center;
+    background: #000;
+    color: var(--white, #fff);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 1.5rem;
+    /* soft glow so the pop-up stands out from the blurred page */
+    box-shadow:
+      0 0 0 1px rgba(164, 118, 255, 0.25),
+      0 0 40px rgba(164, 118, 255, 0.18),
+      0 25px 70px rgba(0, 0, 0, 0.85);
+    transform: translateY(12px) scale(0.97);
+    transition: transform 0.25s ease;
+    outline: none;
+  }
+  .email-overlay.is-open .email-dialog {
+    transform: translateY(0) scale(1);
+  }
+
+  .email-title {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white-icon, #a1a1aa);
+  }
+  .email-address {
+    display: block;
+    margin-bottom: 1.25rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+    word-break: break-all;
+    color: var(--white, #fff);
+    user-select: all;
+  }
+  .email-address:hover {
+    text-decoration: underline;
+  }
+
+  .email-copy {
+    padding: 0.5rem 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--white, #fff);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .email-copy:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .email-close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: flex;
+    padding: 0.4rem;
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--white-icon, #a1a1aa);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .email-close:hover {
+    color: #fff;
+  }
+</style>
+
+<script>
+  const modal = document.getElementById("email-modal");
+
+  if (modal) {
+    const dialog = modal.querySelector<HTMLElement>(".email-dialog")!;
+    const copyBtn = modal.querySelector<HTMLButtonElement>("[data-email-copy]")!;
+    let lastFocused: HTMLElement | null = null;
+
+    const open = (trigger: HTMLElement) => {
+      lastFocused = trigger;
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.documentElement.style.overflow = "hidden";
+      dialog.focus();
+    };
+
+    const close = () => {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      document.documentElement.style.overflow = "";
+      lastFocused?.focus();
+    };
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const trigger = target.closest<HTMLElement>("[data-email-trigger]");
+      if (trigger) {
+        e.preventDefault();
+        open(trigger);
+        return;
+      }
+      if (target === modal || target.closest("[data-email-close]")) close();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("is-open")) return;
+      if (e.key === "Escape") close();
+      if (e.key === "Tab") {
+        // keep keyboard focus inside the pop-up
+        const focusable = Array.from(
+          dialog.querySelectorAll<HTMLElement>("button, a[href]")
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(copyBtn.dataset.email ?? "");
+        copyBtn.textContent = "Copied!";
+      } catch {
+        copyBtn.textContent = "Press Ctrl+C";
+      }
+      setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+    });
+  }
+</script>
