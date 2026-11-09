@@ -45,28 +45,3 @@ const technologies = [
     }
   </div>
 </div>
-
-<style is:global>
-  @keyframes scroll {
-    0% {
-      transform: translate3d(0, 0, 0);
-    }
-    100% {
-      transform: translate3d(-50%, 0, 0);
-    }
-  }
-
-  .animate-scroll {
-    animation: scroll 60s linear infinite;
-  }
-
-  .carousel-track:hover {
-    animation-play-state: paused;
-  }
-
-  @media (min-width: 768px) {
-    .animate-scroll {
-      animation-duration: 50s;
-    }
-  }
-</style>

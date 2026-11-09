@@ -1,0 +1,366 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+import demo from "@/data/tfl_demo_data.json";
+
+const metrics = demo.metricas_tecnicas;
+const horizons = ["15", "30", "45", "60"] as const;
+
+const points = [
+  {
+    label: "0 min",
+    arf: metrics.kappa_presente,
+    naive: metrics.kappa_presente,
+    loss: 0,
+  },
+  ...horizons.map((horizon) => ({
+    label: `${horizon} min`,
+    arf: metrics.kappas_futuro[horizon],
+    naive: metrics.kappas_naive[horizon],
+    loss: metrics.degradacao_arf[horizon],
+  })),
+];
+
+const width = 720;
+const height = 280;
+const pad = { top: 24, right: 20, bottom: 36, left: 44 };
+const innerW = width - pad.left - pad.right;
+const innerH = height - pad.top - pad.bottom;
+
+const x = (index: number) => pad.left + (index / (points.length - 1)) * innerW;
+const y = (value: number) => pad.top + innerH - (value / 100) * innerH;
+const polyline = (key: "arf" | "naive") =>
+  points.map((point, index) => `${x(index)},${y(point[key])}`).join(" ");
+
+const ticks = [0, 20, 40, 60, 80, 100];
+
+const stack = [
+  { label: "Python", icon: "terminal" },
+  { label: "Redis", icon: "database" },
+  { label: "CapyMOA", icon: "layers" },
+  { label: "Streamlit", icon: "window" },
+  { label: "TfL API", icon: "globe" },
+] as const;
+
+const stages = [
+  {
+    step: "01",
+    title: "Ingest",
+    file: "1_ingestao_api.py",
+    icon: "globe",
+    text: "Polls the TfL Unified API every 30 seconds and publishes the raw line status to Redis.",
+  },
+  {
+    step: "02",
+    title: "Learn",
+    file: "2_motor_ml.py",
+    icon: "chart",
+    text: "Trains two adaptive random forests online and scores the 15, 30, 45, and 60-minute horizons.",
+  },
+  {
+    step: "03",
+    title: "Display",
+    file: "3_dashboard.py",
+    icon: "window",
+    text: "Reads the latest payload and redraws the Streamlit operations dashboard once per second.",
+  },
+] as const;
+---
+
+<Layout title="London API — predictive model">
+  <main class="mx-auto max-w-5xl py-16 text-[var(--white)] md:py-24">
+    <a
+      href="/#projects"
+      class="inline-flex items-center gap-2 font-mono text-sm text-[#D12B18] transition-colors hover:text-[#F3705F]"
+    >
+      <Icon name="arrow-left" size={16} />
+      Back to projects
+    </a>
+
+    <header class="mt-8">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
+          Live pipeline
+        </span>
+        <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
+          Data Science · 2025
+        </span>
+      </div>
+
+      <h1 class="mt-4 max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
+        London transport, predicted every 30 seconds.
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--white-icon)] md:text-lg">
+        A streaming machine-learning system for Transport for London. One process
+        collects line status, one learns from it online and forecasts four
+        horizons, and one turns the result into a live operations dashboard.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {
+          stack.map((item) => (
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 font-mono text-[10px] text-[var(--white-icon)]">
+              <Icon name={item.icon} size={12} class="text-[#F3705F]" />
+              {item.label}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href="#snapshot"
+          class="inline-flex items-center gap-2 rounded-full bg-[var(--sec)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#D12B18]"
+        >
+          View the snapshot
+          <Icon name="arrow-right" size={15} />
+        </a>
+        <a
+          href="https://github.com/dicarduso/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-5 py-3 text-sm font-medium text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
+        >
+          <Icon name="github" size={15} />
+          Source on GitHub
+        </a>
+      </div>
+    </header>
+
+    <section id="pipeline" class="mt-14">
+      <p class="font-mono text-sm text-[#D12B18]">
+        <span class="font-bold">$</span> cat README.md
+      </p>
+      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Three files, one loop.</h2>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
+        The producer fetches, the engine learns, the dashboard displays. Redis is
+        the hand-off layer between all three, so each process can restart without
+        replaying history.
+      </p>
+
+      <div class="mt-6 grid gap-4 md:grid-cols-3">
+        {
+          stages.map((stage) => (
+            <div class="rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] text-[#F3705F]">{stage.step}</span>
+                <Icon
+                  name={stage.icon}
+                  size={17}
+                  class="text-[var(--white-icon)]"
+                />
+              </div>
+              <h3 class="mt-3 text-lg font-medium">{stage.title}</h3>
+              <p class="font-mono text-[11px] text-[var(--white-icon)]">
+                {stage.file}
+              </p>
+              <p class="mt-3 text-[13px] leading-relaxed text-[var(--white-icon)]">
+                {stage.text}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section id="snapshot" class="mt-14 scroll-mt-24">
+      <p class="font-mono text-sm text-[#D12B18]">
+        <span class="font-bold">$</span> cat dashboard_estado.json
+      </p>
+      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Predictive degradation.</h2>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
+        A pre-calculated dashboard snapshot: the adaptive forest against the naïve
+        baseline at 0, 15, 30, 45, and 60 minutes.
+      </p>
+
+      <div class="mt-6 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-4 md:p-5">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h3 class="text-sm font-medium text-white">
+              Current predictive degradation
+            </h3>
+            <p class="mt-1 text-[11px] leading-relaxed text-[var(--white-icon)]">
+              Adaptive Random Forest against the naïve baseline across the four
+              prediction horizons.
+            </p>
+          </div>
+          <span class="self-start rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--white-icon)]">
+            snapshot · {demo.timestamp}
+          </span>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-4">
+          <span class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-white/60">
+            <span class="inline-block h-0.5 w-5 bg-[#0098D4]"></span>
+            Adaptive Random Forest
+          </span>
+          <span class="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-white/60">
+            <span class="inline-block w-5 border-t-2 border-dashed border-[#DE2110]"></span>
+            Naïve baseline
+          </span>
+        </div>
+
+        <div class="mt-3 overflow-x-auto">
+          <svg
+            viewBox={`0 0 ${width} ${height}`}
+            class="h-auto w-full min-w-[560px]"
+            role="img"
+            aria-labelledby="london-degradation-title"
+          >
+            <title id="london-degradation-title">
+              Predictive degradation curve comparing the adaptive random forest
+              with the naïve baseline from 0 to 60 minutes.
+            </title>
+
+            {
+              ticks.map((tick) => (
+                <g>
+                  <line
+                    x1={pad.left}
+                    x2={width - pad.right}
+                    y1={y(tick)}
+                    y2={y(tick)}
+                    stroke="rgba(255,255,255,0.07)"
+                    stroke-width="1"
+                  />
+                  <text
+                    x={pad.left - 10}
+                    y={y(tick) + 3}
+                    text-anchor="end"
+                    fill="#8f8f8f"
+                    font-size="10"
+                    font-family="monospace"
+                  >
+                    {tick}%
+                  </text>
+                </g>
+              ))
+            }
+
+            {
+              points.map((point, index) => (
+                <text
+                  x={x(index)}
+                  y={height - pad.bottom + 18}
+                  text-anchor="middle"
+                  fill="#8f8f8f"
+                  font-size="10"
+                  font-family="monospace"
+                >
+                  {point.label}
+                </text>
+              ))
+            }
+
+            <polyline
+              points={polyline("naive")}
+              fill="none"
+              stroke="#DE2110"
+              stroke-width="2"
+              stroke-dasharray="6 5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <polyline
+              points={polyline("arf")}
+              fill="none"
+              stroke="#0098D4"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            {
+              points.map((point, index) => (
+                <g>
+                  <circle
+                    cx={x(index)}
+                    cy={y(point.naive)}
+                    r="3.5"
+                    fill="#DE2110"
+                  >
+                    <title>{`${point.label} · Naïve: ${point.naive.toFixed(1)}%`}</title>
+                  </circle>
+                  <circle cx={x(index)} cy={y(point.arf)} r="4" fill="#0098D4">
+                    <title>{`${point.label} · ARF: ${point.arf.toFixed(1)}%`}</title>
+                  </circle>
+                  {point.loss > 0 && (
+                    <text
+                      x={x(index)}
+                      y={y(point.arf) - 11}
+                      text-anchor="middle"
+                      fill="#b9b9b9"
+                      font-size="10"
+                      font-family="monospace"
+                    >
+                      -{point.loss.toFixed(1)}%
+                    </text>
+                  )}
+                </g>
+              ))
+            }
+          </svg>
+        </div>
+
+        <p class="mt-2 text-[10px] leading-relaxed text-[var(--white-icon)]">
+          Percentages above the ARF line show the relative loss of predictive power
+          compared with the present auditor (0 min).
+        </p>
+
+        <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {
+            points.slice(1).map((point) => (
+              <div class="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
+                  {point.label}
+                </p>
+                <p class="mt-1 font-mono text-lg text-[#0098D4]">
+                  {point.arf.toFixed(1)}%
+                </p>
+                <p class="text-[10px] text-[var(--white-icon)]">
+                  naïve {point.naive.toFixed(1)}%
+                </p>
+                <p class="mt-1 text-[10px] text-[#F3705F]">
+                  -{point.loss.toFixed(1)}%
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="run" class="mt-14">
+      <p class="font-mono text-sm text-[#D12B18]">
+        <span class="font-bold">$</span> ./run.sh
+      </p>
+      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Run the loop.</h2>
+      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
+        Start Redis first. Then keep the producer, the ML engine, and the dashboard
+        running at the same time.
+      </p>
+      <pre class="mt-5 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5 font-mono text-[12px] leading-relaxed text-emerald-300/85"><code>redis-server
+python 1_ingestao_api.py
+python 2_motor_ml.py
+streamlit run 3_dashboard.py</code></pre>
+    </section>
+
+    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+      <a
+        href="/#projects"
+        class="inline-flex items-center gap-2 text-sm text-[var(--white-icon)] transition-colors hover:text-white"
+      >
+        <Icon name="arrow-left" size={15} />
+        Back to all projects
+      </a>
+      <a
+        href="/#contact"
+        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
+      >
+        Discuss this project
+        <Icon name="arrow-right" size={14} />
+      </a>
+    </div>
+  </main>
+</Layout>

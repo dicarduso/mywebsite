@@ -28,102 +28,6 @@ const email = "dicarduso@protonmail.com";
   </div>
 </div>
 
-<style>
-  .email-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.55);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px); /* blurs the whole site behind the pop-up */
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 0.25s ease,
-      visibility 0.25s ease;
-  }
-  .email-overlay.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .email-dialog {
-    position: relative;
-    width: 100%;
-    max-width: 26rem;
-    padding: 2.25rem 1.75rem 1.75rem;
-    text-align: center;
-    background: #000;
-    color: var(--white, #fff);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 1.5rem;
-    /* soft glow so the pop-up stands out from the blurred page */
-    box-shadow:
-      0 0 0 1px rgba(164, 118, 255, 0.25),
-      0 0 40px rgba(164, 118, 255, 0.18),
-      0 25px 70px rgba(0, 0, 0, 0.85);
-    transform: translateY(12px) scale(0.97);
-    transition: transform 0.25s ease;
-    outline: none;
-  }
-  .email-overlay.is-open .email-dialog {
-    transform: translateY(0) scale(1);
-  }
-
-  .email-title {
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--white-icon, #a1a1aa);
-  }
-  .email-address {
-    display: block;
-    margin-bottom: 1.25rem;
-    font-size: 1.15rem;
-    font-weight: 500;
-    word-break: break-all;
-    color: var(--white, #fff);
-    user-select: all;
-  }
-  .email-address:hover {
-    text-decoration: underline;
-  }
-
-  .email-copy {
-    padding: 0.5rem 1.4rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-    background: transparent;
-    color: var(--white, #fff);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  .email-copy:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .email-close {
-    position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
-    display: flex;
-    padding: 0.4rem;
-    border-radius: 9999px;
-    background: transparent;
-    color: var(--white-icon, #a1a1aa);
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-  .email-close:hover {
-    color: #fff;
-  }
-</style>
-
 <script>
   const modal = document.getElementById("email-modal");
 
@@ -179,12 +83,25 @@ const email = "dicarduso@protonmail.com";
     });
 
     copyBtn.addEventListener("click", async () => {
+      const email = copyBtn.dataset.email ?? "";
+
       try {
-        await navigator.clipboard.writeText(copyBtn.dataset.email ?? "");
+        await navigator.clipboard.writeText(email);
         copyBtn.textContent = "Copied!";
       } catch {
-        copyBtn.textContent = "Press Ctrl+C";
+        // Fallback for browsers/contexts where the Clipboard API is blocked.
+        const field = document.createElement("textarea");
+        field.value = email;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.appendChild(field);
+        field.select();
+        const copied = document.execCommand("copy");
+        document.body.removeChild(field);
+        copyBtn.textContent = copied ? "Copied!" : "Press Ctrl+C";
       }
+
       setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
     });
   }

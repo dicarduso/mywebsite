@@ -1,0 +1,40 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Icon from "@/components/Icon.astro";
+---
+
+<Layout title="Hack The Box Walkthrough">
+  <main
+    class="mx-auto flex min-h-[75vh] max-w-5xl flex-col justify-center py-16 text-[var(--white)] md:py-24"
+  >
+
+    <div
+      class="mt-8 rounded-2xl border border-[#D12B18]/30 bg-[#0a0a0a] p-8 md:p-12"
+    >
+      <span
+        class="inline-flex rounded-full border border-[#D12B18]/30 bg-[#D12B18]/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#F3705F]"
+      >
+        Ongoing
+      </span>
+      <h1 class="mt-2 text-4xl font-bold leading-tight md:text-6xl">
+        Still in progress...
+      </h1>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/#projects" class="btn btn-ghost">
+          <Icon name="arrow-left" size={15} />
+          Back to projects
+        </a>
+        <a
+          href="https://github.com/dicarduso/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-primary"
+        >
+          <Icon name="github" size={15} />
+          GitHub
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>

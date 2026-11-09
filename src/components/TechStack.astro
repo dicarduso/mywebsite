@@ -1,0 +1,54 @@
+---
+interface Props {
+  technologies: string[];
+  label?: string;
+}
+
+const { technologies, label = "technologies" } = Astro.props;
+
+const logos: Record<string, string> = {
+  JavaScript: "/svg/javaScript.svg",
+  TypeScript: "/svg/typeScript.svg",
+  React: "/svg/react.svg",
+  Astro: "/svg/astro.svg",
+  "Tailwind CSS": "/svg/tailwindcss.svg",
+  "Node.js": "/svg/nodejs.svg",
+  Next: "/svg/next.svg",
+  Vue: "/svg/vue.svg",
+  Git: "/svg/git.svg",
+  MySQL: "/svg/mysql.svg",
+  Bash: "/svg/bash.svg",
+  HTML5: "/svg/HTML5.svg",
+  CSS3: "/svg/CSS3.svg",
+  Supabase: "/svg/supabase.svg",
+  Vercel: "/svg/vercel.svg",
+};
+---
+
+<div class="mt-auto border-t border-white/[0.07] pt-4">
+  <p class="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--white-icon)]">
+    {label}
+  </p>
+  <ul class="mt-2 flex flex-wrap gap-1.5">
+    {
+      technologies.map((tech: string) => (
+        <li class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-[var(--white-icon)]">
+          {logos[tech] ? (
+            <img
+              src={logos[tech]}
+              alt=""
+              width="14"
+              height="14"
+              class="h-3.5 w-3.5 object-contain opacity-80"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <span class="h-1 w-1 rounded-full bg-[#D12B18]" aria-hidden="true"></span>
+          )}
+          {tech}
+        </li>
+      ))
+    }
+  </ul>
+</div>

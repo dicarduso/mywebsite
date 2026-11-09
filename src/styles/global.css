@@ -1,0 +1,388 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #000000;
+  --sec: #D12B18;
+  --white: #dfdfdf;
+  --white-icon: #f3f3f398;
+  --white-icon-tr: #610808c9;
+  --white-icon-tr-button: #d60707e5;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+html, body {
+  cursor: url('/cursor-def.png') 0 0, auto !important;
+}
+
+a, button, [role="button"] { 
+  cursor: url('/cursor-click.png') 0 0, pointer !important;
+}
+
+* {
+  font-family: "Ubuntu", -apple-system, system-ui, sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+*::selection {
+  background-color: var(--sec);
+  color: var(--background);
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sec);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--white);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sec) var(--background);
+}
+
+/* ===== src/components/prototype.astro & home.astro — shared buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--sec);
+  color: #fff;
+  box-shadow: 0 12px 30px -18px rgba(209, 43, 24, 0.9);
+}
+
+.btn-primary:hover {
+  background: #D12B18;
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--white);
+}
+
+.btn-ghost:hover {
+  border-color: var(--sec);
+  background: rgba(209, 43, 24, 0.08);
+  color: #fff;
+}
+
+/* ===== src/components/EmailModal.astro ===== */
+.email-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px); /* blurs the whole site behind the pop-up */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+.email-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.email-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  padding: 2.25rem 1.75rem 1.75rem;
+  text-align: center;
+  background: #000;
+  color: var(--white, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1.5rem;
+  /* soft glow so the pop-up stands out from the blurred page */
+  box-shadow:
+    0 0 0 1px rgba(209, 43, 24, 0.25),
+    0 0 40px rgba(209, 43, 24, 0.18),
+    0 25px 70px rgba(0, 0, 0, 0.85);
+  transform: translateY(12px) scale(0.97);
+  transition: transform 0.25s ease;
+  outline: none;
+}
+
+.email-overlay.is-open .email-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.email-title {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--white-icon, #a1a1aa);
+}
+
+.email-address {
+  display: block;
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  word-break: break-all;
+  color: var(--white, #fff);
+  user-select: all;
+}
+
+.email-address:hover {
+  text-decoration: underline;
+}
+
+.email-copy {
+  padding: 0.5rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--white, #fff);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.email-copy:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.email-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  display: flex;
+  padding: 0.4rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--white-icon, #a1a1aa);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.email-close:hover {
+  color: #fff;
+}
+
+/* ===== src/components/logoWall.astro ===== */
+@keyframes scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 60s linear infinite;
+}
+
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+@media (min-width: 768px) {
+  .animate-scroll {
+    animation-duration: 50s;
+  }
+}
+
+/* ===== src/components/nav.astro ===== */
+.nav-shell {
+  border-color: transparent;
+  background-color: transparent;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    backdrop-filter 0.3s ease;
+}
+
+.nav-shell.scrolled {
+  background-color: rgba(10, 10, 10, 0.85);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.nav-logo {
+  color: #F3705F;
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.03);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.nav-brand:hover .nav-logo {
+  color: #ffffff;
+  border-color: rgba(209, 43, 24, 0.6);
+  background-color: rgba(209, 43, 24, 0.1);
+}
+
+.nav-link.is-active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 767px) {
+  body:has(#main-nav) {
+    padding-top: 5rem;
+  }
+}
+
+/* ===== src/components/projects.astro ===== */
+.project-cover {
+  background: radial-gradient(
+    120% 120% at 15% 0%,
+    var(--cover-from) 0%,
+    var(--cover-to) 62%
+  );
+}
+
+.project-cover--london {
+  --cover-from: #0b1f2a;
+  --cover-to: #050505;
+}
+
+.project-cover--ctt {
+  --cover-from: #2a0d05;
+  --cover-to: #050505;
+}
+
+.project-cover--htb {
+  --cover-from: #0d2416;
+  --cover-to: #050505;
+}
+
+.project-cover-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* Blurs the rest of the page while a project card is hovered. */
+.projects-blur-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.projects-blur-overlay.is-active {
+  opacity: 1;
+}
+
+.project-card.is-focused {
+  z-index: 140;
+}
+
+/* ===== src/components/contact.astro ===== */
+.contact-card {
+  border: 1px solid var(--white-icon-tr);
+  border-radius: 1rem;
+  background-color: #0a0a0a;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.contact-card:hover {
+  border-color: rgba(209, 43, 24, 0.6);
+  box-shadow: 0 20px 50px -35px rgba(209, 43, 24, 0.5);
+}
+
+.contact-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--white-icon);
+}
+
+.contact-field {
+  width: 100%;
+  border: 1px solid var(--white-icon-tr);
+  border-radius: 0.5rem;
+  background-color: #1414149c;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--white);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact-field::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.contact-field:hover {
+  border-color: rgba(209, 43, 24, 0.6);
+}
+
+.contact-field:focus {
+  outline: none;
+  border-color: var(--sec);
+  box-shadow: 0 0 0 2px rgba(209, 43, 24, 0.2);
+}
