@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Icon from "@/components/Icon.astro";
+import { withBase } from "@/utils/base";
 ---
 
 <Layout title="Hack The Box Walkthrough">
@@ -21,7 +22,7 @@ import Icon from "@/components/Icon.astro";
       </h1>
 
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="/#projects" class="btn btn-ghost">
+        <a href={withBase("/#projects")} class="btn btn-ghost">
           <Icon name="arrow-left" size={15} />
           Back to projects
         </a>

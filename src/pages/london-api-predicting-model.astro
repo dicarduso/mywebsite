@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Icon from "@/components/Icon.astro";
 import demo from "@/data/tfl_demo_data.json";
+import { withBase } from "@/utils/base";
 
 const metrics = demo.metricas_tecnicas;
 const horizons = ["15", "30", "45", "60"] as const;
@@ -45,24 +46,24 @@ const stack = [
 const stages = [
   {
     step: "01",
-    title: "Ingest",
+    title: "Data ingestion",
     file: "1_ingestao_api.py",
     icon: "globe",
-    text: "Polls the TfL Unified API every 30 seconds and publishes the raw line status to Redis.",
+    text: "Periodic fetching of the TfL API JSON content every 30 seconds. Sends the raw JSON data to the Redis Publish/Subscribe channel",
   },
   {
     step: "02",
-    title: "Learn",
+    title: "CapyMoa ML model training",
     file: "2_motor_ml.py",
     icon: "chart",
-    text: "Trains two adaptive random forests online and scores the 15, 30, 45, and 60-minute horizons.",
+    text: "Consumes the data from Redis, and continuously trains two adaptive random forests (ARF) to predict the present statuses and forecast 15, 30, 45, and 60-minute horizons.",
   },
   {
     step: "03",
     title: "Display",
     file: "3_dashboard.py",
     icon: "window",
-    text: "Reads the latest payload and redraws the Streamlit operations dashboard once per second.",
+    text: "Reads the latest payload from Redis and displays live line status alerts, future horizon forecasts, Kappa's statistic, concept drift warnings, XAI feature importance, and compares the ARF to the naive model",
   },
 ] as const;
 ---
@@ -70,7 +71,7 @@ const stages = [
 <Layout title="London API — predictive model">
   <main class="mx-auto max-w-5xl py-16 text-[var(--white)] md:py-24">
     <a
-      href="/#projects"
+      href={withBase("/#projects")}
       class="inline-flex items-center gap-2 font-mono text-sm text-[#D12B18] transition-colors hover:text-[#F3705F]"
     >
       <Icon name="arrow-left" size={16} />
@@ -80,7 +81,7 @@ const stages = [
     <header class="mt-8">
       <div class="flex flex-wrap items-center gap-2">
         <span class="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-0.5 text-[10px] font-medium text-emerald-300">
-          Live pipeline
+          Demo
         </span>
         <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
           Data Science · 2025
@@ -88,13 +89,15 @@ const stages = [
       </div>
 
       <h1 class="mt-4 max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
-        London transport, predicted every 30 seconds.
+        London's transport line status, predicted every 30 seconds.
       </h1>
 
-      <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--white-icon)] md:text-lg">
-        A streaming machine-learning system for Transport for London. One process
-        collects line status, one learns from it online and forecasts four
-        horizons, and one turns the result into a live operations dashboard.
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--white-icon)] md:text-l">
+        
+          A Machine Learning pipeline built with CapyMoa operating on a 30-second ingestion loop, feeding two adaptive random forests, 
+          to score 15, 30, 45, and 60-minute disruption horizons. Redis acts as a low-latency communication system transmiting streaming data 
+          between the components, and Streamlit displays a live Dashboard with the forecasts on multiple lines.
+
       </p>
 
       <div class="mt-6 flex flex-wrap gap-2">
@@ -111,7 +114,7 @@ const stages = [
       <div class="mt-6 flex flex-wrap gap-3">
         <a
           href="#snapshot"
-          class="inline-flex items-center gap-2 rounded-full bg-[var(--sec)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#D12B18]"
+          class="inline-flex items-center gap-2 rounded-full bg-[var(--sec)] px-5 py-3 text-m font-medium text-white transition-colors hover:bg-[#D12B18]"
         >
           View the snapshot
           <Icon name="arrow-right" size={15} />
@@ -120,7 +123,7 @@ const stages = [
           href="https://github.com/dicarduso/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-5 py-3 text-sm font-medium text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
+          class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-5 py-3 text-m font-medium text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
         >
           <Icon name="github" size={15} />
           Source on GitHub
@@ -129,33 +132,38 @@ const stages = [
     </header>
 
     <section id="pipeline" class="mt-14">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> cat README.md
+      <p class="font-mono text-m text-[#F3705F]">
+        <span class="font-bold text-[#D12B18]">$</span> cat overview.md
       </p>
-      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Three files, one loop.</h2>
-      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
-        The producer fetches, the engine learns, the dashboard displays. Redis is
-        the hand-off layer between all three, so each process can restart without
-        replaying history.
+      <h2 class="mt-2 text-3xl font-medium md:text-4xl"> Pipeline - three files.</h2>
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
+        The pipeline is split into 3 components, Data ingestion - CapyMoa ML model training - Display of the results using Streamlit.
+      </p>
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">  
+        Redis is used as the hand-off layer between the three components, serving as the storage system for the ingested streaming data
+        and the final payload of the CapyMoa model after training. 
+      </p> 
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
+        This allows the Dashboard component to continuously consult the state of the last payload.
       </p>
 
       <div class="mt-6 grid gap-4 md:grid-cols-3">
         {
           stages.map((stage) => (
-            <div class="rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5">
+            <div class="rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-7">
               <div class="flex items-center justify-between">
-                <span class="font-mono text-[10px] text-[#F3705F]">{stage.step}</span>
+                <span class="font-mono text-[13px] text-[#F3705F]">{stage.step}</span>
                 <Icon
                   name={stage.icon}
-                  size={17}
+                  size={18}
                   class="text-[var(--white-icon)]"
                 />
               </div>
-              <h3 class="mt-3 text-lg font-medium">{stage.title}</h3>
-              <p class="font-mono text-[11px] text-[var(--white-icon)]">
+              <h3 class="mt-3 text-xl font-medium">{stage.title}</h3>
+              <p class="font-mono text-[13px] text-[var(--white-icon)]">
                 {stage.file}
               </p>
-              <p class="mt-3 text-[13px] leading-relaxed text-[var(--white-icon)]">
+              <p class="mt-3 text-[15px] leading-relaxed text-[var(--white-icon)]">
                 {stage.text}
               </p>
             </div>
@@ -164,20 +172,32 @@ const stages = [
       </div>
     </section>
 
-    <section id="snapshot" class="mt-14 scroll-mt-24">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> cat dashboard_estado.json
+    <section id="run" class="mt-14">
+      <p class="font-mono text-m text-[#F3705F]">
+        <span class="font-bold text-[#D12B18]">$</span> ./run.sh
       </p>
+      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Run the loop.</h2>
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
+        Start Redis first. Then keep the producer, the ML engine, and the dashboard
+        running at the same time.
+      </p>
+      <pre class="mt-5 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5 font-mono text-[12px] leading-relaxed text-emerald-300/85"><code>
+          python 1_ingestao_api.py
+          python 2_motor_ml.py
+          streamlit run 3_dashboard.py</code></pre>
+    </section>
+
+    <section id="snapshot" class="mt-14 scroll-mt-24">
       <h2 class="mt-2 text-3xl font-medium md:text-4xl">Predictive degradation.</h2>
-      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
-        A pre-calculated dashboard snapshot: the adaptive forest against the naïve
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
+        A pre-calculated demo dashboard snapshot using synthetic data, showing the comparison between the adaptive random forest and the naïve
         baseline at 0, 15, 30, 45, and 60 minutes.
       </p>
 
       <div class="mt-6 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-4 md:p-5">
-        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div class="flex flex-col gap-2 m:flex-row m:items-start m:justify-between">
           <div>
-            <h3 class="text-sm font-medium text-white">
+            <h3 class="text-m font-medium text-white">
               Current predictive degradation
             </h3>
             <p class="mt-1 text-[11px] leading-relaxed text-[var(--white-icon)]">
@@ -308,14 +328,14 @@ const stages = [
           compared with the present auditor (0 min).
         </p>
 
-        <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div class="mt-4 grid grid-cols-2 gap-2 m:grid-cols-4">
           {
             points.slice(1).map((point) => (
               <div class="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
                 <p class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
                   {point.label}
                 </p>
-                <p class="mt-1 font-mono text-lg text-[#0098D4]">
+                <p class="mt-1 font-mono text-xl text-[#0098D4]">
                   {point.arf.toFixed(1)}%
                 </p>
                 <p class="text-[10px] text-[var(--white-icon)]">
@@ -331,32 +351,17 @@ const stages = [
       </div>
     </section>
 
-    <section id="run" class="mt-14">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> ./run.sh
-      </p>
-      <h2 class="mt-2 text-3xl font-medium md:text-4xl">Run the loop.</h2>
-      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
-        Start Redis first. Then keep the producer, the ML engine, and the dashboard
-        running at the same time.
-      </p>
-      <pre class="mt-5 overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5 font-mono text-[12px] leading-relaxed text-emerald-300/85"><code>redis-server
-python 1_ingestao_api.py
-python 2_motor_ml.py
-streamlit run 3_dashboard.py</code></pre>
-    </section>
-
-    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 m:flex-row m:items-center m:justify-between">
       <a
-        href="/#projects"
-        class="inline-flex items-center gap-2 text-sm text-[var(--white-icon)] transition-colors hover:text-white"
+        href={withBase("/#projects")}
+        class="inline-flex items-center gap-2 text-m text-[var(--white-icon)] transition-colors hover:text-white"
       >
         <Icon name="arrow-left" size={15} />
         Back to all projects
       </a>
       <a
-        href="/#contact"
-        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
+        href={withBase("/#contact")}
+        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-m text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
       >
         Discuss this project
         <Icon name="arrow-right" size={14} />

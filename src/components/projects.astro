@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import TechStack from "./TechStack.astro";
+import { withBase } from "../utils/base";
 
 interface ProjectCover {
   variant: string;
@@ -44,6 +45,7 @@ const projects: Project[] = [
     title: "CTT's Bank Phishing Kit analysis",
     subtitle:
       "Reverse-engineering a real phishing kit, uncovering all it's functions.",
+    image: "/projects/ctt-phish.jpeg",
     link: "https://github.com/dicarduso/",
     preview: "/ctt-bank-phishing-kit-analysis",
     status: "Concluded",
@@ -51,7 +53,7 @@ const projects: Project[] = [
     year: "2026",
     summary:
       "A documented analysis of a real phishing kit impersonating Portugal's bank CTT.Deobfuscation and explanation of every function on the malicious JavaScript code (fingerprinting, obfuscation and deobfuscation, AES-encryption, DOM manipulation, etc )",
-    technologies: ["JavaScript", "Burpsuite", "HTML", "Webcrack"],
+    technologies: ["JavaScript", "Burp Suite", "HTML", "Webcrack"],
     cover: {
       variant: "ctt",
       icon: "shield",
@@ -106,12 +108,14 @@ const isExternal = (href: string) => href.startsWith("http");
       </span>
     </div>
 
-    <div class="mt-8 grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-8 flex flex-col items-stretch gap-6 md:flex-row">
       {
         projects.map((project) => (
-          <article data-project-card class="project-card group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a0a] transition-all duration-500 hover:scale-105 hover:border-[#D12B18]/50 hover:shadow-[0_24px_70px_-36px_rgba(209, 43, 24,0.55)]">
+          <article
+            class="project-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a0a] transition-[flex-grow,border-color,box-shadow] duration-300 ease-out hover:border-[#D12B18]/50 hover:shadow-[0_24px_70px_-36px_rgba(209, 43, 24,0.55)] md:basis-0 md:grow md:hover:z-10 md:hover:grow-[2]"
+          >
             <a
-              href={project.preview}
+              href={withBase(project.preview)}
               target={isExternal(project.preview) ? "_blank" : undefined}
               rel={isExternal(project.preview) ? "noopener noreferrer" : undefined}
               class="relative block aspect-[16/10] overflow-hidden"
@@ -119,15 +123,15 @@ const isExternal = (href: string) => href.startsWith("http");
             >
               {project.image ? (
                 <img
-                src={project.image}
+                src={withBase(project.image)}
                 alt=""
-                class="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-sm"
+                class="project-image h-full w-full scale-[1.18] object-cover transition-[transform,filter] duration-500 ease-out group-hover:scale-100 group-hover:blur-[3px]"
                 loading="lazy"
                 decoding="async"
             />
               ) : (
                 <div
-                  class={`project-cover project-cover--${project.cover.variant} relative h-full w-full transition-transform duration-500 group-hover:scale-110`}
+                  class={`project-cover project-cover--${project.cover.variant} relative h-full w-full scale-[1.18] transition-transform duration-500 ease-out group-hover:scale-100`}
                 >
                   <div class="project-cover-grid absolute inset-0 opacity-[0.16]" />
                   <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full border border-white/10" />
@@ -137,7 +141,7 @@ const isExternal = (href: string) => href.startsWith("http");
 
               <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/10" />
 
-              <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
+              <div class="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4 transition-opacity duration-300 group-hover:opacity-0 group-hover:pointer-events-none">
                 <div class="flex flex-wrap gap-1.5">
                   <span
                     class={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${statusStyles[project.status] ?? "border-white/15 bg-black/40 text-white/70"}`}
@@ -154,15 +158,16 @@ const isExternal = (href: string) => href.startsWith("http");
               </div>
 
               <div class=" absolute inset-x-0 bottom-0 p-4 ">
-                <div class="flex items-center gap-2 font-mono text-[10px] text-white/55">
+                <div class="flex items-center gap-2 font-mono text-[10px] text-white/55 transition-opacity duration-300 group-hover:opacity-0">
                   <span class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] text-white/85">
                     <Icon name={project.cover.icon} size={15} />
                     </span>
                 </div>
 
-                <p class="mt-3 max-h-0 overflow-hidden text-[13px] leading-relaxed text-white/80 opacity-0 transition-all duration-300 group-hover:max-h-28 group-hover:opacity-100">
-                  {project.summary}
-                </p>
+                <p class="mt-3 grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-out group-hover:grid-rows-[1fr] group-hover:opacity-100">
+                  <span class="overflow-hidden text-[13px] leading-relaxed text-white/80">
+                    {project.summary}</span>
+                    </p>
               </div>
             </a>
 
@@ -171,7 +176,7 @@ const isExternal = (href: string) => href.startsWith("http");
                 <div>
                   <h4 class="text-xl font-semibold leading-snug transition-colors group-hover:text-[#F3705F]">
                     <a
-                      href={project.preview}
+                      href={withBase(project.preview)}
                       target={isExternal(project.preview) ? "_blank" : undefined}
                       rel={isExternal(project.preview) ? "noopener noreferrer" : undefined}
                       class="outline-none focus-visible:underline"
@@ -207,7 +212,7 @@ const isExternal = (href: string) => href.startsWith("http");
 
               <div class="mt-4 flex items-center justify-between gap-3 border-t border-white/[0.07] pt-4">
                 <a
-                  href={project.preview}
+                  href={withBase(project.preview)}
                   target={isExternal(project.preview) ? "_blank" : undefined}
                   rel={isExternal(project.preview) ? "noopener noreferrer" : undefined}
                   class="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--white)] transition-colors hover:text-[#F3705F]"
@@ -243,30 +248,5 @@ const isExternal = (href: string) => href.startsWith("http");
       </svg>
     </a>
   </div>
-
-  <div id="projects-blur-overlay" class="projects-blur-overlay" aria-hidden="true"></div>
 </section>
 
-<script>
-  const overlay = document.getElementById("projects-blur-overlay");
-  const cards = document.querySelectorAll<HTMLElement>("[data-project-card]");
-
-  const focusCard = (card: HTMLElement) => {
-    cards.forEach((item) => item.classList.toggle("is-focused", item === card));
-    overlay?.classList.add("is-active");
-  };
-
-  const clearFocus = () => {
-    cards.forEach((card) => card.classList.remove("is-focused"));
-    overlay?.classList.remove("is-active");
-  };
-
-  cards.forEach((card) => {
-    card.addEventListener("mouseenter", () => focusCard(card));
-    card.addEventListener("mouseleave", clearFocus);
-    card.addEventListener("focusin", () => focusCard(card));
-    card.addEventListener("focusout", (event) => {
-      if (!card.contains(event.relatedTarget as Node | null)) clearFocus();
-    });
-  });
-</script>

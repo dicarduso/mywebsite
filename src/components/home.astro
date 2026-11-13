@@ -43,7 +43,7 @@ import { site } from "../data/site.ts";
 
         <!-- Botões principais -->
         <div class="flex flex-wrap items-center gap-3 pt-4">
-          <a href="/#projects" class="btn btn-primary group">
+          <a href="#projects" class="btn btn-primary group">
             View selected work
             <Icon
               name="arrow-right"
@@ -78,10 +78,10 @@ import { site } from "../data/site.ts";
       </div>
 
       <!-- LADO DIREITO: O Terminal com LetterGlitch -->
-      <div class="relative flex flex-col w-full h-full min-h-[350px] lg:min-h-[450px] max-w-md lg:max-w-none overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20 shadow-2xl">
+      <div class="relative flex flex-col w-full h-[400px] lg:h-[450px] max-w-md lg:max-w-none overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20 shadow-2xl">
         
         <!-- Cabeçalho do Terminal -->
-        <div class="relative z-20 flex items-center justify-between border-b border-white/10 bg-[#0a0a0a] px-4 py-3">
+        <div class="relative z-20 flex items-center justify-between border-b border-white/10 bg-[#0a0a0a] px-4 py-3 shrink-0">
           <div class="flex items-center gap-1.5" aria-hidden="true">
             <span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>
             <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
@@ -91,20 +91,18 @@ import { site } from "../data/site.ts";
           <span class="font-mono text-[10px] text-emerald-400/80">● live</span>
         </div>
 
-        <!-- Corpo do Terminal (Espaço para a animação) -->
+        <!-- Corpo do Terminal com LetterGlitch -->
         <div class="relative z-10 w-full flex-1 bg-black">
-          <div class="absolute inset-0">
-            <LetterGlitch
-              client:load
-              glitchColors={["#ff040463", "#fa261f", "#000000"]}
-              glitchSpeed={33}
-              centerVignette={false}
-              outerVignette={true}
-              smooth={true}
-            />
-            </div>
-          </div>
+          <LetterGlitch
+            client:load
+            glitchColors={["#ff040463", "#fa261f", "#000000"]}
+            glitchSpeed={33}
+            centerVignette={false}
+            outerVignette={true}
+            smooth={true}
+          />
         </div>
+      </div>
 
       </div>
     </div>

@@ -9,6 +9,8 @@
   --white-icon: #f3f3f398;
   --white-icon-tr: #610808c9;
   --white-icon-tr-button: #d60707e5;
+  --cursor-def: url('/cursor-def.png');
+  --cursor-click: url('/cursor-click.png');
 }
 
 @keyframes blink {
@@ -25,11 +27,11 @@
 }
 
 html, body {
-  cursor: url('/cursor-def.png') 0 0, auto !important;
+  cursor: var(--cursor-def), auto !important;
 }
 
 a, button, [role="button"] { 
-  cursor: url('/cursor-click.png') 0 0, pointer !important;
+  cursor: var(--cursor-click), pointer !important;
 }
 
 * {
@@ -283,6 +285,22 @@ a, button, [role="button"] {
   }
 }
 
+/* ===== src/React/PhishingGraph.tsx ===== */
+.analysis-window {
+  animation: analysis-open 0.22s ease;
+}
+
+@keyframes analysis-open {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ===== src/components/projects.astro ===== */
 .project-cover {
   background: radial-gradient(
@@ -312,27 +330,6 @@ a, button, [role="button"] {
     linear-gradient(to right, rgba(255, 255, 255, 0.22) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
   background-size: 26px 26px;
-}
-
-/* Blurs the rest of the page while a project card is hovered. */
-.projects-blur-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 130;
-  background: rgba(0, 0, 0, 0.35);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.projects-blur-overlay.is-active {
-  opacity: 1;
-}
-
-.project-card.is-focused {
-  z-index: 140;
 }
 
 /* ===== src/components/contact.astro ===== */

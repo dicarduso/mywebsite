@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Icon from "@/components/Icon.astro";
 import PhishingGraph from "@/React/PhishingGraph.tsx";
 import analysisData from "@/data/phishing-analysis.json";
+import { withBase } from "@/utils/base";
 
 type GraphNode = {
   id: string;
@@ -15,7 +16,7 @@ type GraphNode = {
   children?: GraphNode[];
 };
 
-const root = analysisData as GraphNode;
+const root = (analysisData as { obfuscated: GraphNode }).obfuscated;
 const leaves: GraphNode[] = [];
 
 const collectLeaves = (node: GraphNode) => {
@@ -55,8 +56,8 @@ const findings = [
 <Layout title="CTT Bank Phishing Kit Analysis">
   <main class="mx-auto max-w-5xl py-16 text-[var(--white)] md:py-24">
     <a
-      href="/#projects"
-      class="inline-flex items-center gap-2 font-mono text-sm text-[#D12B18] transition-colors hover:text-[#F3705F]"
+      href={withBase("/#projects")}
+      class="inline-flex items-center gap-2 font-mono text-m text-[#D12B18] transition-colors hover:text-[#F3705F]"
     >
       <Icon name="arrow-left" size={16} />
       Back to projects
@@ -64,140 +65,63 @@ const findings = [
 
     <header class="mt-8">
       <div class="flex flex-wrap items-center gap-2">
-        <span class="rounded-full border border-[#D12B18]/30 bg-[#D12B18]/10 px-2.5 py-0.5 text-[10px] font-medium text-[#F3705F]">
-          Case study
-        </span>
         <span class="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
-          Cyber Security · 2025
+          Cyber Security · 2026
         </span>
       </div>
 
       <h1 class="mt-4 max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
-        Anatomy of a CTT bank phishing kit.
+        Analysis of a CTT bank phishing kit.
       </h1>
 
       <p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--white-icon)] md:text-lg">
-        A live kit impersonating Portugal's postal service used User-Agent
-        cloaking, a Base64 loader, and a Telegram bot to steal card data and SMS
-        codes. This is the shorter teardown: what it does, how it hides, and what
-        defenders can look for.
+        A documented analysis of a real phishing kit impersonating Portugal's bank CTT, where you can find the analysis of commonly used headers on 
+        phishing kits and other HTML elements in this case study. Aswell as the deobfuscation and explanation of every function 
+        on the malicious JavaScript code (fingerprinting, obfuscation and deobfuscation, AES encryption, DOM manipulation, etc ).
       </p>
 
       <div class="mt-6 flex flex-wrap gap-2">
         {
-          ["Cyber Security", "Malware analysis", "2025"].map((tag) => (
+          ["Malware analysis", "Obfuscated Javascript",  "Webcrack", "Burp Suite", "HTML"].map((tag) => (
             <span class="rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 font-mono text-[10px] text-[var(--white-icon)]">
               {tag}
             </span>
           ))
         }
       </div>
-
-      <div class="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4">
-        {
-          [
-            { value: String(leaves.length), label: "behaviours mapped" },
-            { value: String(categories.length), label: "analysis categories" },
-            { value: String(criticalCount), label: "critical findings" },
-            { value: String(highCount), label: "high-impact findings" },
-          ].map((stat) => (
-            <div class="bg-[#0a0a0a] px-4 py-3">
-              <p class="font-mono text-2xl font-medium text-white">{stat.value}</p>
-              <p class="mt-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--white-icon)]">
-                {stat.label}
-              </p>
-            </div>
-          ))
-        }
-      </div>
     </header>
 
-    <section class="mt-14">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> cat overview.md
+    {/* Project partners — fill in the three hrefs/names when ready. */}
+    <section class="mt-8 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5">
+      <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#F3705F]">
+        Project partners
       </p>
-      <h2 class="mt-2 text-3xl font-medium md:text-4xl">What the kit does.</h2>
-
-      <div class="mt-4 space-y-4 text-sm leading-relaxed text-[var(--white-icon)]">
-        <p>
-          Phishing kits sit at the intersection of social engineering and software
-          engineering. The user-facing part is designed to be believable; the
-          machine-facing part is designed to be boring to analyse, expensive to
-          block, and easy to redeploy.
-        </p>
-        <p>
-          This sample was recovered during a campaign impersonating{" "}
-          <span class="text-[var(--white)]">CTT</span>, the Portuguese postal
-          operator. The lure is familiar: a parcel is held, a small fee is due,
-          and the recipient is asked to confirm their details. What makes the kit
-          worth documenting is how much effort went into not being seen.
-        </p>
-        <p>
-          The analysis combines static reading of the payload with a controlled
-          detonation in an isolated browser profile. Tokens, identifiers, and
-          domains are redacted or defanged. No live victim data is included.
-        </p>
-      </div>
-
-      <div class="mt-6 rounded-2xl border-l-2 border-[#D12B18] bg-white/[0.02] px-5 py-4">
-        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#F3705F]">
-          In one paragraph
-        </p>
-        <p class="mt-2 text-sm leading-relaxed text-white/80">
-          The kit profiles every visitor before deciding whether to show a fake CTT
-          form. Clean Portuguese consumer traffic gets a multi-step credential
-          form; scanners get the real CTT website. Stolen values are validated in
-          the browser and forwarded to a Telegram bot.
-        </p>
+      <div class="mt-3 flex flex-wrap gap-3">
+        {[
+          { name: "Partner 1", href: "#" },
+          { name: "Partner 2", href: "#" },
+          { name: "Partner 3", href: "#" },
+        ].map((partner) => (
+          <a
+            href={partner.href}
+            class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-4 py-2 font-mono text-xs text-white/80 transition-colors hover:border-[#D12B18]/50 hover:text-white"
+          >
+            {partner.name}
+            <span aria-hidden="true">↗</span>
+          </a>
+        ))}
       </div>
     </section>
 
     <section class="mt-14">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> grep findings
-      </p>
       <h2 class="mt-2 text-3xl font-medium md:text-4xl">
-        Three findings that matter.
+        The conceptmap of the attack.
       </h2>
-
-      <div class="mt-6 grid gap-3 sm:grid-cols-3">
-        {
-          findings.map((finding) => (
-            <div class="rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5">
-              <div class="flex items-center justify-between gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg border border-[#D12B18]/25 bg-[#D12B18]/10 text-[#F3705F]">
-                  <Icon name={finding.icon} size={17} />
-                </span>
-                <span
-                  class={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] ${
-                    finding.severity === "Critical"
-                      ? "border-red-500/30 bg-red-500/10 text-red-300"
-                      : "border-orange-500/30 bg-orange-500/10 text-orange-300"
-                  }`}
-                >
-                  {finding.severity}
-                </span>
-              </div>
-              <h3 class="mt-3 text-sm font-medium text-white">{finding.title}</h3>
-              <p class="mt-1.5 text-xs leading-relaxed text-[var(--white-icon)]">
-                {finding.body}
-              </p>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="mt-14">
-      <p class="font-mono text-sm text-[#D12B18]">
-        <span class="font-bold">$</span> tree attack-surface
-      </p>
-      <h2 class="mt-2 text-3xl font-medium md:text-4xl">
-        The attack surface, mapped.
-      </h2>
-      <p class="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--white-icon)]">
-        Expand a category and select a leaf to read the description, the
-        defensive angle, and the original and deobfuscated code from the sample.
+      <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
+        Pick one of the two analysis blocks below — the landing page's HTTP
+        headers and HTML structure, or the obfuscated payload. Inside the
+        payload you can read the complete obfuscated file against its
+        deobfuscated twin, or explore the kit function by function.
       </p>
 
       <div class="mt-6">
@@ -205,20 +129,13 @@ const findings = [
       </div>
     </section>
 
-    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mt-14 border-t border-white/10 pt-8">
       <a
-        href="/#projects"
-        class="inline-flex items-center gap-2 text-sm text-[var(--white-icon)] transition-colors hover:text-white"
+        href={withBase("/#projects")}
+        class="inline-flex items-center gap-2 text-m text-[var(--white-icon)] transition-colors hover:text-white"
       >
         <Icon name="arrow-left" size={15} />
         Back to all projects
-      </a>
-      <a
-        href="/#contact"
-        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm text-[var(--white)] transition-colors hover:border-[#D12B18]/50 hover:text-white"
-      >
-        Discuss this analysis
-        <Icon name="arrow-right" size={14} />
       </a>
     </div>
   </main>

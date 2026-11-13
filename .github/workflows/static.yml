@@ -1,6 +1,25 @@
-# Simple workflow for deploying static content to GitHub Pages
+# ---------------------------------------------------------------------------
+# Deploy this Astro site to GitHub Pages.
+#
+# The result is published at: https://dicarduso.github.io/mywebsite/
+#
+# How it works (end to end):
+#   1. A push to `main` (or a manual run from the Actions tab) starts a runner.
+#   2. The runner installs dependencies and runs `npm run build` with
+#      DEPLOY_TARGET=github-pages, which makes Astro:
+#        - build with base "/mywebsite" (so asset URLs match the Pages URL)
+#        - write the finished site into ./dist
+#   3. The built site (./dist) is uploaded as the "github-pages" artifact.
+#   4. The artifact is deployed to the Pages environment, replacing whatever
+#      was live before.
+#
+# NOTE: the repository source alone (this repo, without a build) has no
+# index.html at its root, so GitHub Pages cannot serve it directly. That is
+# why this workflow MUST build first and upload ./dist.
+# ---------------------------------------------------------------------------
 name: Deploy static content to Pages
 
+# When to run:
 on:
   # Runs on pushes targeting the default branch
   push:
@@ -9,7 +28,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Permissions the built-in GITHUB_TOKEN needs in order to publish to Pages.
 permissions:
   contents: read
   pages: write
@@ -22,7 +41,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
+  # One job: build the site, upload its output, deploy it.
   deploy:
     environment:
       name: github-pages
@@ -31,13 +50,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Node 22 matches the LTS used for local development.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` installs exactly what package-lock.json pins (like npm install,
+      # but reproducible and faster on CI).
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the static site. DEPLOY_TARGET makes astro.config.mjs use
+      # base: "/mywebsite" for this build only. Local builds are unaffected.
+      - name: Build site
+        run: npm run build
+        env:
+          DEPLOY_TARGET: github-pages
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          # The built site, not the repository source.
+          path: "./dist"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

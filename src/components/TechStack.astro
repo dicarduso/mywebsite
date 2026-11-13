@@ -1,4 +1,6 @@
 ---
+import { withBase } from "../utils/base";
+
 interface Props {
   technologies: string[];
   label?: string;
@@ -35,7 +37,7 @@ const logos: Record<string, string> = {
         <li class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-2.5 py-1 text-[10px] text-[var(--white-icon)]">
           {logos[tech] ? (
             <img
-              src={logos[tech]}
+              src={withBase(logos[tech])}
               alt=""
               width="14"
               height="14"
