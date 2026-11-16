@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import analysisData from "../data/phishing-analysis.json";
 import obfuscatedSource from "../data/obfuscated-phish.js?raw";
 import deobfuscatedSource from "../data/deobfusvated-phish.js?raw";
+import rawResponse from "../data/phish-response.html?raw";
 
 type Impact = "Critical" | "High" | "Medium" | "Low";
 
@@ -236,6 +237,7 @@ export default function PhishingGraph() {
   );
   const [selected, setSelected] = useState<NodeData | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [showResponse, setShowResponse] = useState(false);
 
   // The tree being explored in the current view.
   const activeTree: NodeData | null =
@@ -269,6 +271,7 @@ export default function PhishingGraph() {
     setSelected(null);
     setQuery("");
     setImpact("All");
+    setShowResponse(false);
     if (next === "functions") {
       setExpanded(
         new Set(["root", "obfuscation-shell", "entry-point-helpers"]),
@@ -577,12 +580,28 @@ export default function PhishingGraph() {
                       : htmlRoot.label
                   }
                 />
-                <BackButton
-                  label={view === "functions" ? "obfuscated analysis" : "back"}
-                  onClick={() =>
-                    changeView(view === "functions" ? "obf-choose" : "root")
-                  }
-                />
+                <div className="flex shrink-0 items-center gap-2">
+                  {view === "html" && (
+                    <button
+                      type="button"
+                      onClick={() => setShowResponse((s) => !s)}
+                      aria-pressed={showResponse}
+                      className={`inline-flex items-center rounded-full border px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors hover:border-[#D12B18]/50 hover:text-white ${
+                        showResponse
+                          ? "border-[#D12B18]/60 text-white"
+                          : "border-white/10 text-white/70"
+                      }`}
+                    >
+                      full http response
+                    </button>
+                  )}
+                  <BackButton
+                    label={view === "functions" ? "obfuscated analysis" : "back"}
+                    onClick={() =>
+                      changeView(view === "functions" ? "obf-choose" : "root")
+                    }
+                  />
+                </div>
               </div>
               {activeLeaves.length > 0 && (
                 <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center">
@@ -635,6 +654,8 @@ export default function PhishingGraph() {
             </div>
           </div>
 
+          {!showResponse && (
+            <>
           {/* Selection block + impact scale side by side */}
           <div className="flex flex-col gap-4 border-y border-white/[0.07] p-4 lg:flex-row lg:items-stretch">
             <div className="min-w-0 flex-1">
@@ -708,6 +729,19 @@ export default function PhishingGraph() {
               </div>
             )}
           </div>
+            </>
+          )}
+
+          {showResponse && (
+            <div className="flex h-[70vh] min-h-[560px] flex-col p-4">
+              <EvidenceBlock
+                label="http response — full"
+                code={rawResponse}
+                copied={copied === "http-response"}
+                onCopy={() => copyCode(rawResponse, "http-response")}
+              />
+            </div>
+          )}
         </>
       )}
     </div>
