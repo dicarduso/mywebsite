@@ -24,7 +24,7 @@
             "type": "leaf",
             "category": "Infrastructure",
             "impact": "Low",
-            "description": "Headers revealing proxying through Cloudflare edge servers with dynamic caching and network error logging (NEL).",
+            "description": "Routes traffic through Cloudflare CDN edge servers with dynamic caching, i.e., every request is routed straight to the origin server without being stored in cache.",
             "codeObfuscated": "Server: cloudflare\nCf-Cache-Status: DYNAMIC\nCf-Ray: a4d99fac1e091ba5-MAD"
           },
           {
@@ -33,7 +33,7 @@
             "type": "leaf",
             "category": "Infrastructure",
             "impact": "Medium",
-            "description": "Forces the victim's browser and intermediary proxy servers to fetch fresh content on every request, allowing the C2 server to enforce real-time IP bans and session step-ups.",
+            "description": "Stops intermediary proxy servers from saving the response and forces the browser to revalidate with the server everytime there is a second access or a refresh, to re-evaluate if the victim's IP address is banned.",
             "codeObfuscated": "Cache-Control: private, no-cache"
           },
           {
@@ -42,7 +42,7 @@
             "type": "leaf",
             "category": "Anti-Analysis",
             "impact": "Medium",
-            "description": "Instructs the browser to omit the Referer header on subsequent requests, obstructing traffic analysis and origin tracing back to the initial phishing vector.",
+            "description": "Instructs the browser to omit the Referer header on subsequent requests, preventing external domains (such as third-party libraries or the legitimate CTT portal) from logging the phishing origin URL (and other metadata) in incoming traffic.",
             "codeObfuscated": "Referrer-Policy: no-referrer"
           },
           {
@@ -51,7 +51,7 @@
             "type": "leaf",
             "category": "Infrastructure",
             "impact": "Low",
-            "description": "Enforces HTTPS via HSTS for 7 days (max-age=604800), mimicking legitimate banking portals and preventing SSL stripping attacks.",
+            "description": "Enforces HTTPS via HSTS for 7 days (max-age=604800), preventing SSL stripping attacks while ensuring the phishing domain mimics legitimate security standards without browser warnings.",
             "codeObfuscated": "Strict-Transport-Security: max-age=604800"
           },
           {
@@ -60,17 +60,8 @@
             "type": "leaf",
             "category": "Infrastructure",
             "impact": "Low",
-            "description": "Configures Cloudflare Network Error Logging (NEL) to collect network failure reports, alerting attackers if their infrastructure faces ISP DNS sinkholing or security vendor blocklists.",
+            "description": "Configures Cloudflare Network Error Logging (NEL) to collect network failure reports.",
             "codeObfuscated": "Report-To: {\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=T8UwBXN4mxFA%2FyDuBJlXrcdvd7dGqyaTK6rAh5Lr4%2BcKCrVdo%2B1clpf7wn69IxajDLOc1gzK%2BETyrJdMXPMuLs0Wfr9MqLzY8wosMM3Xs74v4Tjbxqkj4Jh1uGKu8xydkwjfntyeOcmQLn5PF0%2FHx3Na8mmi8cw%3D\"}]}\nNel: {\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
-          },
-          {
-            "id": "http3-altsvc-optimization",
-            "label": "Alt-Svc: h3=\":443\" - HTTP/3 QUIC Protocol Support",
-            "type": "leaf",
-            "category": "Infrastructure",
-            "impact": "Low",
-            "description": "Advertises HTTP/3 (QUIC) support on port 443, optimizing payload delivery speeds and potentially bypassing legacy TCP/HTTP signature inspection tools.",
-            "codeObfuscated": "Alt-Svc: h3=\":443\"; ma=86400"
           }
         ]
       },
@@ -85,25 +76,25 @@
             "type": "leaf",
             "category": "Anti-Analysis",
             "impact": "Medium",
-            "description": "Invisible anchor tag targeting a relative 'blackhole' path to trap automated vulnerability scanners and security crawlers.",
+            "description": "By default, automated vulnerability scanners and security crawlers sparse the HTML to follow every link (href) in a response, so this invisible anchor tag targeting a relative 'blackhole' path is used to trap them, since no real user would be able to see or click it.",
             "codeObfuscated": "<a href=\"./blackhole\\\"></a>"
           },
           {
             "id": "hidden-state-inputs",
             "label": "State Counter & Crypto Seed Inputs",
             "type": "leaf",
-            "category": "DOM & Crypto",
+            "category": "Tokens",
             "impact": "High",
-            "description": "Hidden form inputs storing the current step in the phishing flow (gs_step) and a 32-character hex token (gs_token) used as the AES encryption key seed.",
+            "description": "Hidden inputs that store the current stage of the phishing flow (gs_step) and a unique 32-character hex token (gs_token), unique to each page load, used as the AES encryption key seed.",
             "codeObfuscated": "<input id=\"id_gs_step\" type=\"hidden\" name=\"gs_step\" value=\"0\"></input>\n<input id=\"id_gs_token\" type=\"hidden\" value=\"49df96286e202948ecc882730ca0f714\"></input>"
           },
           {
             "id": "visual-stall-overlay",
-            "label": ".modal & CSS Pulsing Animation - Visual Stall",
+            "label": ".modal & Pulsing Animation - Visual Stall",
             "type": "leaf",
-            "category": "UX & Evasion",
+            "category": "Visuals",
             "impact": "Medium",
-            "description": "Full-viewport transparent overlay (.modal) animated via @keyframes mymove to create a visual loading effect while telemetry scripts run silently in the background.",
+            "description": "Pulsing animation to create a visual loading effect while telemetry scripts run silently in the background.",
             "codeObfuscated": "<div class=\"modal\"></div>\n@keyframes mymove {from {background-color: rgba(240,240,240,0.5);}to {background-color: rgba(125,125,125,0.5);}}"
           }
         ]
@@ -140,11 +131,11 @@
           },
           {
             "id": "lookup-engine",
-            "label": "_0x4140() - Lookup Engine",
+            "label": "_0x4140() - String Decoder",
             "type": "leaf",
             "category": "Obfuscation",
             "impact": "Medium",
-            "description": "Uses a to deobfuscate .",
+            "description": "Uses a self-overwritting-function with an offset calculation to deobfuscate selected strings (functions, ...) from the _0x1dc5() array of strings.",
             "codeObfuscated": "function _0x4140(_0x19393a, _0x352ccd) {\n    const _0x1dc5d4 = _0x1dc5();\n    return _0x4140 = function(_0x41400b, _0x6e80ea) {\n        _0x41400b = _0x41400b - 0x1c5;\n        let _0x99860d = _0x1dc5d4[_0x41400b];\n        return _0x99860d;\n    }, _0x4140(_0x19393a, _0x352ccd);\n}"
           },
           {
@@ -153,8 +144,8 @@
             "type": "leaf",
             "category": "Obfuscation",
             "impact": "High",
-            "description": "Immediately Invoked Function Expression running a mathematical loop that shifts the string array elements until a target checksum (0x206c4) is matched, preventing static string indexing.",
-            "codeObfuscated": "(function(_0x38e550, _0x2c7d79) {\n    const _0x18192f = _0x4140,\n        _0x1e1599 = _0x38e550();\n    while (!![]) {\n        try {\n            const _0x271629 = -parseInt(_0x18192f(0x1e1)) / 0x1 + -parseInt(_0x18192f(0x1f7)) / 0x2 * (parseInt(_0x18192f(0x1db)) / 0x3) + -parseInt(_0x18192f(0x1d0)) / 0x4 + parseInt(_0x18192f(0x1d9)) / 0x5 * (parseInt(_0x18192f(0x1f5)) / 0x6) + parseInt(_0x18192f(0x1f3)) / 0x7 * (parseInt(_0x18192f(0x1dc)) / 0x8) + -parseInt(_0x18192f(0x1ca)) / 0x9 * (parseInt(_0x18192f(0x1c5)) / 0xa) + parseInt(_0x18192f(0x1c6)) / 0xb;\n            if (_0x271629 === _0x2c7d79) break;\n            else _0x1e1599['push'](_0x1e1599['shift']());\n        } catch (_0x449378) {\n            _0x1e1599['push'](_0x1e1599['shift']());\n        }\n    }\n}(_0x1dc5, 0x206c4))"
+            "description": "Immediately Invoked Function Expression (IIFE) that dynamically shifts the unorganized string array until an arithmetic checksum equals 0x206c4 (132,804), preventing static string extraction and analysis.",
+            "codeObfuscated": "(function(_0x38e550, _0x2c7d79) {\n    const _0x18192f = _0x4140,\n        _0x1e1599 = _0x38e550();\n    while (!![]) {\n        try {\n            const _0x271629 = -parseInt(_0x18192f(0x1e1)) / 0x1 + -parseInt(_0x18192f(0x1f7)) / 0x2 * (parseInt(_0x18192f(0x1db)) / 0x3) + -parseInt(_0x18192f(0x1d0)) / 0x4 + parseInt(_0x18192f(0x1d9)) / 0x5 * (parseInt(_0x18192f(0x1f5)) / 0x6) + parseInt(_0x18192f(0x1f3)) / 0x7 * (parseInt(_0x18192f(0x1dc)) / 0x8) + -parseInt(_0x18192f(0x1ca)) / 0x9 * (parseInt(_0x18192f(0x1c5)) / 0xa) + parseInt(_0x18192f(0x1c6)) / 0xb;\n            if (_0x271629 === _0x2c7d79) break;\n            else _0x1e1599['push'](_0x1e1599['shift']());\n        } catch (_0x449378) {\n            _0x1e1599['push'](_0x１e１５９９['shift']());\n        }\n    }\n}(_０ｘ１dc５, ０ｘ２０６c４))"
           }
         ]
       },
