@@ -489,13 +489,13 @@ export default function PhishingGraph() {
           <MenuBlock
             tag="analysis 01"
             title="HTTP headers and HTML structure"
-            subtitle="How the kit's landing page announces itself: response headers, meta tags, form structure, and the raw HTML skeleton of the phishing page."
+            subtitle="Response headers, meta tags, form structure, and the raw HTML skeleton of the HTTP's response of the phishing page."
             onClick={() => changeView("html")}
           />
           <MenuBlock
             tag="analysis 02"
             title="Obfuscated Analysis"
-            subtitle="Inside the payload: the full obfuscated file versus its deobfuscated twin, plus a function-by-function breakdown of the kit's behaviour."
+            subtitle="Comparison between the full obfuscated and deobfuscated Javascript, or a function-by-function breakdown of the kit's behaviour."
             onClick={() => changeView("obf-choose")}
           />
         </div>
@@ -515,13 +515,13 @@ export default function PhishingGraph() {
             <MenuBlock
               tag="mode a"
               title="Full file comparison"
-              subtitle="The complete obfuscated file and its deobfuscated counterpart, side by side in equal panes. Scroll through all of it, line by line."
+              subtitle="The comparison between the full obfuscated and deobfuscated JS, side by side."
               onClick={() => changeView("full")}
             />
             <MenuBlock
               tag="mode b"
               title="Functions"
-              subtitle="A behaviour tree of every function the kit defines — pick one to inspect its obfuscated code with an explanation beside it."
+              subtitle="A behaviour tree of every function the kit defines and an analysis of its code."
               onClick={() => changeView("functions")}
             />
           </div>
@@ -534,7 +534,7 @@ export default function PhishingGraph() {
           <div className="flex items-center justify-between gap-3">
             <ViewHeader
               tag="full file comparison"
-              title="Obfuscated vs deobfuscated — the complete files"
+              title="Obfuscated vs deobfuscated — the full files"
             />
             <BackButton
               label="back"
@@ -716,7 +716,7 @@ export default function PhishingGraph() {
                     </p>
                     <p className="mt-1.5 max-h-[40vh] overflow-y-auto text-xs leading-relaxed text-white/70">
                       {selected.description ||
-                        "Explanation will be added here later."}
+                        "No explanation."}
                     </p>
                   </div>
                 </div>

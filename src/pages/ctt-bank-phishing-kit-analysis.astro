@@ -91,37 +91,13 @@ const findings = [
       </div>
     </header>
 
-    {/* Project partners — fill in the three hrefs/names when ready. */}
-    <section class="mt-8 rounded-2xl border border-white/[0.08] bg-[#0a0a0a] p-5">
-      <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#F3705F]">
-        Project partners
-      </p>
-      <div class="mt-3 flex flex-wrap gap-3">
-        {[
-          { name: "Partner 1", href: "#" },
-          { name: "Partner 2", href: "#" },
-          { name: "Partner 3", href: "#" },
-        ].map((partner) => (
-          <a
-            href={partner.href}
-            class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-4 py-2 font-mono text-xs text-white/80 transition-colors hover:border-[#D12B18]/50 hover:text-white"
-          >
-            {partner.name}
-            <span aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </div>
-    </section>
-
     <section class="mt-14">
       <h2 class="mt-2 text-3xl font-medium md:text-4xl">
         The conceptmap of the attack.
       </h2>
       <p class="mt-3 max-w-2xl text-m leading-relaxed text-[var(--white-icon)]">
-        Pick one of the two analysis blocks below — the landing page's HTTP
-        headers and HTML structure, or the obfuscated payload. Inside the
-        payload you can read the complete obfuscated file against its
-        deobfuscated twin, or explore the kit function by function.
+        Pick one of the two analysis blocks below: the most interesting headers and HTML elements of the HTTP's response, or the obfuscated JavaScript payload. 
+        Inside the payload you can compare the full obfuscated deobfuscated code, or explore the kit's functions and obfuscation techniques to understand how it works.
       </p>
 
       <div class="mt-6">
