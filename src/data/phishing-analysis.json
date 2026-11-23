@@ -212,7 +212,7 @@
             "type": "leaf",
             "category": "Anti-Analysis",
             "impact": "High",
-            "description": "Scans window scope functions for non-native implementations (lacking '[native code]'), detecting browser extension hooks, Selenium/Puppeteer automation, or active debuggers.",
+            "description": "Scans the window object for injected functions (that might be added by analysis tools, browser extensions,...), and stores the last function before the first script function is scanned in 'lstfn.\n When a function is non-native, not anonymous and whose name doesn't start with '_0x' (like the ones defined in the script), it detects it as suspicious, and increments the 'injfn' counter and appends the function's name to the 'injfnlst' array.",
             "codeObfuscated": "function _0xd626f5() {\n    const _0x488359 = _0x2b5393;\n    let _0x42f78a = ![];\n    for (let _0xd7b27a in window) {\n        if (typeof window[_0xd7b27a] === 'function') {\n            if (_0xd7b27a[_0x488359(0x1d1)](_0x488359(0x1df)) === 0x0) _0x42f78a = !![];\n            if (!_0x42f78a) _0x174230[_0x488359(0x1fb)] = _0xd7b27a;\n            let _0x3319d3 = window[_0xd7b27a][_0x488359(0x1d2)]()[_0x488359(0x1f6)]();\n            _0x3319d3['indexOf'](_0x488359(0x1e3)) === -0x1 && !(_0x3319d3[_0x488359(0x1d1)](_0x488359(0x1d3)) === 0x0) && !(_0xd7b27a[_0x488359(0x1d1)](_0x488359(0x1df)) === 0x0) && (_0x174230['injfn']++, _0x174230[_0x488359(0x1f4)][_0x488359(0x1e5)](_0xd7b27a));\n        }\n    }\n}\n_0xd626f5();"
           },
           {
