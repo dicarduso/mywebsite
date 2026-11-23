@@ -9,8 +9,8 @@
   --white-icon: #f3f3f398;
   --white-icon-tr: #610808c9;
   --white-icon-tr-button: #d60707e5;
-  --cursor-def: url('/cursor-def.png');
-  --cursor-click: url('/cursor-click.png');
+  --cursor-def: url('/cursor-def.png') 0 0;
+  --cursor-click: url('/cursor-click.png') 0 0;
 }
 
 @keyframes blink {
