@@ -217,7 +217,7 @@
           },
           {
             "id": "fingerprinting",
-            "label": "_0x34b50e() - Browser Fingerprint",
+            "label": "_0x34b50e() - Fingerprinting Engine",
             "type": "leaf",
             "category": "Fingerprinting",
             "impact": "High",
