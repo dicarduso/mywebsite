@@ -203,7 +203,7 @@
     },
       {
         "id": "telemetry-anti-bot",
-        "label": "Telemetry & Anti-Analysis",
+        "label": "Telemetry",
         "type": "category",
         "children": [
           {
@@ -225,12 +225,12 @@
             "codeObfuscated": "function _0x34b50e() {\n    const _0x490a1e = _0x2b5393;\n    let _0x28607e = [];\n    for (let _0x230243 in window) {\n        _0x28607e[_0x490a1e(0x1e5)](_0x230243);\n    }\n    _0x174230[_0x490a1e(0x1cd)] = _0x14917c['MD5'](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [], _0x28607e = Object[_0x490a1e(0x1c9)](window), _0x174230[_0x490a1e(0x1ea)] = _0x14917c[_0x490a1e(0x1dd)](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [];\n    for (let _0x5d077f in navigator) {\n        _0x28607e['push'](_0x5d077f);\n    }\n    _0x174230[_0x490a1e(0x1e0)] = _0x14917c[_0x490a1e(0x1dd)](JSON[_0x490a1e(0x1e9)](_0x28607e))['toString'](), _0x28607e = [];\n    let _0x43c74d = document[_0x490a1e(0x1e8)]('div');\n    for (let _0x38aa79 in _0x43c74d) {\n        _0x28607e[_0x490a1e(0x1e5)](_0x38aa79);\n    }\n    let _0x44baea = getComputedStyle(_0x43c74d);\n    for (let _0x23a84f in _0x44baea) {\n        _0x28607e[_0x490a1e(0x1e5)](_0x23a84f);\n    }\n    _0x174230[_0x490a1e(0x1ee)] = _0x14917c['MD5'](JSON['stringify'](_0x28607e))[_0x490a1e(0x1d2)]();\n}\n_0x34b50e();"
           },
           {
-            "id": "screen-referrer",
-            "label": "_0x154a09() - Screen & Referrer Validation",
+            "id": "scripts-referrer",
+            "label": "_0x154a09() - Injected Script Check & Referrer",
             "type": "leaf",
-            "category": "Validation",
+            "category": "Anti-Analysis",
             "impact": "Medium",
-            "description": "Records the total loaded script elements count and captures the document.referrer header to validate traffic origin.",
+            "description": "Calculates the number of script elements loaded in the DOM using 'document.scripts.length - 2' (subtracting the 2 original scripts used by the kit) and stores the count in the dictionary at 'ldscrp' to detect injected scripts. Initializes 'dcrfr' at the dictionary and uses the document.referrer to detect and store the traffic origin (if there is no traffic origin detected, 'dcrfr' stays empty).",
             "codeObfuscated": "function _0x154a09() {\n    const _0x29e845 = _0x2b5393;\n    let _0x173029 = document[_0x29e845(0x1f8)][_0x29e845(0x1e7)] - 0x2;\n    _0x174230[_0x29e845(0x1d7)] = _0x173029;\n}\n_0x154a09(), _0x174230['dcrfr'] = '';\nif (document['referrer'] !== '') _0x174230[_0x2b5393(0x1e4)] = document['referrer'];"
           }
         ]
